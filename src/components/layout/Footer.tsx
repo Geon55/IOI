@@ -1,44 +1,59 @@
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { Download } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const Footer = () => {
     return (
         <footer className={styles.footer}>
-            <div className={styles.section}>
-                <h3>기본 기재사항</h3>
-                <ul>
-                    <li>(주) 스탠다드핀</li>
-                    <li>대표: 홍길동</li>
-                    <li>사업자등록번호: 000-00-00000</li>
-                    <li>주소: 서울특별시 ...</li>
-                </ul>
-            </div>
-            <div className={styles.section}>
-                <h3>회사 소개서</h3>
-                <ul>
-                    <li><Link href="/we-are" className={styles.link}>브랜드 소개</Link></li>
-                    <li><Link href="/history" className={styles.link}>히스토리</Link></li>
-                    <li><Link href="/internal" className={styles.link}>내부활동</Link></li>
-                </ul>
-            </div>
-            <div className={styles.section}>
-                <h3>해더 네비게이션</h3>
-                <ul>
-                    <li><Link href="/" className={styles.link}>메인</Link></li>
-                    <li><Link href="/we-are" className={styles.link}>WE ARE</Link></li>
-                    <li><Link href="/work" className={styles.link}>WORK</Link></li>
-                    <li><Link href="/portfolio" className={styles.link}>Portfolio</Link></li>
-                    <li><Link href="/contact" className={styles.link}>Contact</Link></li>
-                </ul>
-            </div>
-            <div className={styles.section}>
-                <h3>SNS</h3>
-                <ul>
-                    <li><Link href="#" className={styles.link}>스토어</Link></li>
-                    <li><Link href="#" className={styles.link}>YOUTUBE</Link></li>
-                    <li><Link href="#" className={styles.link}>Instagram</Link></li>
-                </ul>
+            <div className={styles.container}>
+                <div className={styles.leftSection}>
+                    {/* Logo */}
+                    <div className={styles.logo}>
+                        <Image src="/logo.png" alt="IOI Logo" fill style={{ objectFit: 'contain', objectPosition: 'left' }} />
+                    </div>
+
+                    {/* Company Info */}
+                    <div className={styles.infoRow}>
+                        <span>대표이사 : 김지현</span>
+                        <span>대표전화 : 070-4351-7184</span>
+                        <span>사업자등록번호 : 121-870-1699</span>
+                    </div>
+
+                    <div className={styles.infoRow}>
+                        <span>콘텐츠 제휴/공급문의 : contents@ioi_design.life</span>
+                    </div>
+
+                    <div className={styles.infoRow}>
+                        <span>본사 : 인천시 부평구 부평대로 293, 1109호 (청천동,부평테크시티)</span>
+                    </div>
+
+                    <div className={styles.copyright}>
+                        © 2025 (주)아이오아이. All rights reserved
+                    </div>
+                </div>
+
+                <div className={styles.rightSection}>
+                    <div className={styles.navColumn}>
+                        <span className={styles.navTitle}>WORK</span>
+                        <Link href="#" className={styles.navLink}>
+                            회사소개서 <Download size={14} />
+                        </Link>
+                    </div>
+
+                    <div className={styles.navColumn}>
+                        <Link href="/portfolio" className={styles.navTitle}>PORTFOLIO</Link>
+                    </div>
+
+                    <div className={styles.navColumn}>
+                        <Link href="/contact" className={styles.navTitle}>CONTACT</Link>
+                    </div>
+
+                    <div className={styles.navColumn}>
+                        <span className={styles.navTitle}>SNS</span>
+                    </div>
+                </div>
             </div>
         </footer>
     );

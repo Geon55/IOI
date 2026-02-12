@@ -1,72 +1,402 @@
+/* ... Keep existing hero styles ... */
+.hero {
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 10vw 8vh 10vw;
+  background-color: #000;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('/main_bg.png');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.heroContent {
+  max-width: 600px;
+  z-index: 10;
+  position: absolute;
+  top: 30%;
+  left: 10vw;
+}
+
+.badge {
+  background-color: #00ff00;
+  color: #000;
+  padding: 0.25rem 0.8rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-bottom: 2rem;
+  border-radius: 2px;
+}
+
+.heroTitle {
+  font-size: 5.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.heroStats {
+  position: absolute;
+  bottom: 8vh;
+  left: 10vw;
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+  z-index: 10;
+}
+
+.statValue {
+  color: #fff;
+  font-weight: bold;
+}
+
+.statDivider {
+  margin: 0 0.5rem;
+  color: #555;
+}
+
 .main {
-  padding-top: 80px;
+  background-color: #111;
+  color: white;
   min-height: 100vh;
 }
 
-.hero {
-  height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f7f7f7;
-  text-align: center;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
 .section {
-  padding: 4rem 2rem;
+  padding: 8rem 10vw;
+  border-bottom: 1px solid #333;
+}
+
+/* Process Section Specifics */
+.processGrid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  /* Increased sidebar width */
+  gap: 4rem;
+  align-items: start;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .sectionTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  text-align: center;
+  font-size: 3.5rem;
+  /* 폰트 사이즈 키움 */
+  font-weight: 300;
+  /* 얇은 폰트 기본 */
+  margin-bottom: 0;
+  line-height: 1.3;
+  color: #888;
 }
 
-.bgGray {
-  background-color: #f9f9f9;
+.sectionTitle strong {
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  /* 줄바꿈 강조 */
 }
 
-.grid {
+.sectionTitle span {
+  color: #888;
+}
+
+.processList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
-.card {
-  background: white;
-  padding: 1.5rem;
+.processItem {
+  display: block;
+}
+
+.imageStack {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.processImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  /* 정사각형 비율 */
+  overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.contactSection {
+.processImage img {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.processImage:hover img {
+  transform: scale(1.05);
+}
+
+.processContent {
+  padding-top: 0.5rem;
+}
+
+.processStep {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.processDesc {
+  font-size: 0.95rem;
+  color: #999;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* Clients Grid Update */
+/* Clients Grid Update */
+/* Clients Grid Update */
+.clientsContainer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  /* Reduced from 350px */
+  gap: 3rem;
+  /* Reduced from 4rem */
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.clientsTitleMain {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.clientsTitleSub {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.clientsDesc {
+  font-size: 1rem;
+  color: #999;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.clientsGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  /* Reduced from 1rem */
+  row-gap: 2rem;
+}
+
+.clientLogo {
+  aspect-ratio: 2/1;
+  /* More horizontal for logos like in image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.clientLogo:hover {
+  opacity: 1;
+}
+
+/* Intro Section Update */
+/* Intro Section Update */
+.introSection {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 6rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.introTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.introSubtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.introDesc {
+  color: #999;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  word-break: keep-all;
+}
+
+.introCard {
+  background: radial-gradient(circle at 50% 60%, rgba(0, 122, 255, 0.4) 0%, rgba(2, 6, 23, 1) 50%, #000 100%);
+  border-radius: 12px;
+  aspect-ratio: 16/10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
   text-align: center;
-  background: #111;
-  color: white;
-  padding: 6rem 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.contactButton {
-  display: inline-block;
-  padding: 1rem 2rem;
-  border: 1px solid white;
-  color: white;
-  margin-top: 1rem;
+.introCardText {
+  font-size: 2.5rem;
+  font-weight: 700;
+  z-index: 10;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.introCardSub {
+  font-family: sans-serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  letter-spacing: 0.1rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.introLink {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-decoration: none;
-  transition: all 0.3s;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.introLink:hover {
+  opacity: 0.8;
+}
+
+/* Cert Grid Update */
+.certGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.certItem {
+  background: white;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border-radius: 4px;
 }
 
-.contactButton:hover {
-  background: white;
-  color: black;
+.certImage {
+  width: 100%;
+  aspect-ratio: 1/1.4;
+  background-color: #eee;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #aaa;
+}
+
+.certName {
+  font-size: 0.8rem;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+}
+
+@media (max-width: 1024px) {
+
+  .processGrid,
+  .clientsContainer,
+  .introSection {
+    grid-template-columns: 1fr;
+  }
+
+  .processGrid,
+  .clientsContainer {
+    gap: 3rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* ... existing mobile styles ... */
+  .hero {
+    padding: 0 5vw;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroContent {
+    left: 5vw;
+    top: 25%;
+  }
+
+  .heroStats {
+    left: 5vw;
+    bottom: 5vh;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .section {
+    padding: 4rem 1.5rem;
+  }
+
+  .processList {
+    grid-template-columns: 1fr;
+  }
+
+  .clientsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .certGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

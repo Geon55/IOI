@@ -1,60 +1,233 @@
 .container {
-    padding: 120px 2rem 4rem;
-    max-width: 800px;
+    padding-top: 120px;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #fff;
+    padding-bottom: 6rem;
+}
+
+.inner {
+    max-width: 1000px;
+    /* Centered narrow content */
     margin: 0 auto;
+    padding: 0 2rem;
 }
 
-.mapContainer {
-    height: 400px;
-    background-color: #eee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Hero Section */
+.hero {
     margin-bottom: 4rem;
+}
+
+.badge {
+    background-color: #00ff00;
+    color: #000;
+    padding: 0.3rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+    border-radius: 2px;
+}
+
+.titleMain {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.titleSub {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: #aaa;
+    margin-bottom: 2rem;
+}
+
+.description {
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 3rem;
+}
+
+/* Service Buttons */
+.serviceButtons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 4rem;
+}
+
+.serviceBtn {
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    border: none;
+    background-color: #333;
+    /* Darker default background */
+    color: #aaa;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+    flex: 0 0 auto;
+    /* Prevent stretching */
+}
+
+.serviceBtn:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+.serviceBtnActive {
+    background-color: #e0e0e0;
+    /* Matches the white/grey selected state */
+    color: #000;
+    font-weight: 700;
+}
+
+/* Form Container */
+.formContainer {
+    background-color: #222;
+    border: 1px solid #333;
     border-radius: 12px;
+    padding: 4rem;
 }
 
-.formSection {
-    margin-top: 4rem;
+.formTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    color: #fff;
 }
 
-.form {
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4rem;
+    row-gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
 }
 
 .label {
-    display: block;
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    color: #fff;
     font-weight: 500;
 }
 
-.input,
-.textarea {
-    width: 100%;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+.input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #444;
+    padding: 0.5rem 0;
+    color: #fff;
     font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
 }
 
-.textarea {
-    min-height: 150px;
-    resize: vertical;
+.input:focus {
+    border-bottom-color: #fff;
 }
 
-.button {
-    background-color: #000;
-    color: white;
-    padding: 1rem 2rem;
+.fileUploadDesc {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+/* Text Area */
+.fullWidth {
+    grid-column: 1 / -1;
+}
+
+/* Text Area Box */
+.textArea {
+    width: 100%;
+    height: 350px;
+    background-color: #4a4a4a;
+    /* Lighter grey than container */
     border: none;
     border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
     font-size: 1rem;
-    cursor: pointer;
-    align-self: flex-start;
+    resize: none;
+    outline: none;
+    margin-top: 1rem;
 }
 
-.button:hover {
+/* Bottom Actions */
+.bottomRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    border-top: 1px solid #333;
+    padding-top: 2rem;
+}
+
+.privacyLink {
+    color: #ccc;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.submitArea {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ccc;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.submitBtn {
     background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 0.8rem 3rem;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+}
+
+.submitBtn:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .formContainer {
+        padding: 2rem;
+    }
+
+    .formGrid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .bottomRow {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+
+    .submitArea {
+        width: 100%;
+        justify-content: space-between;
+    }
 }

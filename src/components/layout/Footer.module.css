@@ -1,49 +1,112 @@
 .footer {
-    background-color: #111;
-    color: #fff;
-    padding: 4rem 2rem;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    font-size: 0.9rem;
-}
-
-.section h3 {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
+    background-color: #121212;
     color: #888;
+    padding: 4rem 1rem;
+    /* Reduced horizontal padding as container handles it */
+    border-top: 1px solid #222;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
-.section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
-.section li {
+.leftSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+}
+
+.logo {
+    margin-bottom: 1rem;
+    position: relative;
+    width: 120px;
+    /* Adjusted size */
+    height: 32px;
+}
+
+.infoRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    line-height: 1.6;
+}
+
+.infoItem {
+    position: relative;
+}
+
+.copyright {
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.rightSection {
+    display: flex;
+    gap: 4rem;
+    padding-top: 0.5rem;
+    /* Align with top of text */
+}
+
+.navColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Increased gap */
+}
+
+.navTitle {
+    color: #eee;
+    font-weight: 700;
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
-}
-
-.link {
-    color: #ccc;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: color 0.2s;
 }
 
-.link:hover {
+.navLink {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+
+.navLink:hover {
     color: #fff;
 }
 
-@media (max-width: 768px) {
-    .footer {
-        grid-template-columns: 1fr 1fr;
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .rightSection {
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: flex-start;
     }
 }
 
-@media (max-width: 480px) {
-    .footer {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    .infoRow {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .rightSection {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 }

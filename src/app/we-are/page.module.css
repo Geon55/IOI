@@ -1,26 +1,412 @@
 .container {
-    padding: 120px 2rem 4rem;
-    max-width: 1000px;
-    margin: 0 auto;
+    background-color: #111;
+    color: #fff;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
 }
 
-.section {
-    margin-bottom: 6rem;
-    scroll-margin-top: 100px;
-    /* For fixed header */
+/* Hero */
+.hero {
+    height: 100vh;
+    position: relative;
+    background: url('/main_bg.png') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 10vw;
 }
 
-.title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #000;
-    padding-bottom: 0.5rem;
-    display: inline-block;
+.heroOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
 }
 
-.text {
-    font-size: 1.1rem;
+.heroContent {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin-top: 4rem;
+    /* Adjust for header */
+}
+
+.heroTitle {
+    font-size: 8rem;
+    font-weight: 300;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+    color: #fff;
+}
+
+.heroSubtitle {
+    font-weight: 700;
+    margin-left: 25%;
+    /* Indent "OF IDEA" */
+    display: block;
+}
+
+.heroDescBox {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 2rem;
+    max-width: 600px;
+}
+
+.heroDesc {
+    font-size: 1rem;
     line-height: 1.8;
-    color: #333;
+    color: #ccc;
+    word-break: keep-all;
+}
+
+.heroDesc strong {
+    color: #fff;
+    font-weight: 700;
+}
+
+
+/* Values */
+.valuesSection {
+    padding: 8rem 10vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    background-color: #111;
+}
+
+.valueTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #fff;
+    position: relative;
+}
+
+.valueTitle::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 30px;
+    height: 2px;
+    background-color: #fff;
+}
+
+.valueText {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #aaa;
+    word-break: keep-all;
+}
+
+/* Stats */
+.statsSection {
+    padding: 8rem 10vw;
+    background-color: #1a1a1a;
+}
+
+.statsMainTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 5rem;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.statsGridMain {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4rem;
+}
+
+.statMainItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.statSubGroup {
+    display: flex;
+    gap: 5rem;
+}
+
+.statSubItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.statLabel {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.statValueBig {
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 0.9;
+    color: #fff;
+}
+
+.statValueMedium {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 0.9;
+    color: #666;
+    /* Dimmer per design */
+    -webkit-text-stroke: 1px #888;
+    color: transparent;
+    /* Outline effect possibility */
+    color: #666;
+    /* Fallback */
+}
+
+.statValueBig small,
+.statValueMedium small {
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+    font-weight: 400;
+    color: #888;
+}
+
+.statSubText {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 700;
+    text-align: right;
+    display: none;
+    /* Hide confusing numbers from image for now */
+}
+
+.statsGridSub {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.statDetailItem {
+    background: #252525;
+    padding: 1.2rem;
+    color: #aaa;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statDetailItem strong {
+    color: #fff;
+    font-weight: 700;
+}
+
+
+/* History */
+.historySection {
+    padding: 8rem 10vw;
+    background-color: #151515;
+}
+
+.sectionTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.yearList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    justify-content: flex-start;
+    font-family: 'Arial', sans-serif;
+    /* Blockier font */
+}
+
+.yearItem {
+    -webkit-text-stroke: 1px #444;
+    color: transparent;
+    transition: all 0.3s;
+    cursor: default;
+}
+
+.currentYear {
+    color: #fff;
+    -webkit-text-stroke: 0;
+}
+
+.yearItem:hover {
+    color: #fff;
+    -webkit-text-stroke: 0;
+}
+
+
+/* Life */
+.lifeSection {
+    padding: 8rem 10vw;
+    background-color: #111;
+}
+
+.lifeGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 300px);
+    gap: 1rem;
+}
+
+.lifeItem {
+    background-size: cover;
+    background-position: center;
+    background-color: #333;
+}
+
+/* Masonry layout simulation matching the image */
+/* Image shows:
+   [ Big Vertical ] [ Half Top ] [ Half Top ]
+   [ Big Vertical ] [ Half Bot ] [ Half Bot ]
+   Wait, it looks like:
+   [ Tall Left ] [ Top Right ]
+                 [ Bot Right ]
+   Actually looks like a collage.
+   Let's do:
+   [ Item 1 (Tall) ] [ Item 2 ] [ Item 3 ]
+   [ Item 1 (Tall) ] [ Item 4 ] [ Item 5 ]
+*/
+.lifeItem:nth-child(1) {
+    grid-column: 1 / 3;
+    grid-row: 1 / 3;
+    background-color: #2a2a2a;
+}
+
+.lifeItem:nth-child(2) {
+    grid-column: 3 / 5;
+    grid-row: 1 / 2;
+    background-color: #333;
+}
+
+.lifeItem:nth-child(3) {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    background-color: #3a3a3a;
+}
+
+.lifeItem:nth-child(4) {
+    grid-column: 4 / 5;
+    grid-row: 2 / 3;
+    background-color: #444;
+}
+
+.lifeItem:nth-child(5) {
+    display: none;
+}
+
+/* Only 4 needed for this layout? Image had 5. Let's adjust */
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .heroTitle {
+        font-size: 4rem;
+    }
+
+    .heroSubtitle {
+        margin-left: 0;
+    }
+
+    .valuesSection {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .statsGridMain {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+
+    .statSubGroup {
+        width: 100%;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .statsGridSub {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .yearList {
+        font-size: 3rem;
+    }
+
+    .lifeGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .lifeItem:nth-child(1) {
+        grid-column: auto;
+        grid-row: auto;
+        height: 300px;
+    }
+
+    .lifeItem:nth-child(2) {
+        grid-column: auto;
+        grid-row: auto;
+        height: 250px;
+    }
+
+    .lifeItem:nth-child(3) {
+        grid-column: auto;
+        grid-row: auto;
+        height: 250px;
+    }
+
+    .lifeItem:nth-child(4) {
+        grid-column: auto;
+        grid-row: auto;
+        height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sectionTitle {
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .statsMainTitle {
+        font-size: 1.25rem;
+    }
+
+    .statValueBig {
+        font-size: 4rem;
+    }
+
+    .statValueMedium {
+        font-size: 2.5rem;
+    }
+
+    .hero {
+        padding: 0 5vw;
+    }
+
+    .valuesSection,
+    .statsSection,
+    .historySection,
+    .lifeSection {
+        padding: 4rem 5vw;
+    }
 }
