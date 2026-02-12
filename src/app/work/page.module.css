@@ -1,0 +1,44 @@
+.container {
+    padding: 120px 2rem 4rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.step {
+    display: flex;
+    margin-bottom: 6rem;
+    align-items: flex-start;
+    gap: 3rem;
+    scroll-margin-top: 100px;
+}
+
+.stepNumber {
+    font-size: 5rem;
+    font-weight: 900;
+    color: #ddd;
+    min-width: 100px;
+    text-align: right;
+    line-height: 1;
+}
+
+.stepContent {
+    flex: 1;
+}
+
+.stepTitle {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.stepDesc {
+    color: #555;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .step {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
