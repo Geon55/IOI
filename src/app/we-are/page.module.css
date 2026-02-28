@@ -3,17 +3,44 @@
     color: #fff;
     min-height: 100vh;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
 }
 
-/* Hero */
-.hero {
-    height: 100vh;
+/* Hero Flow Layout */
+.topHeroSection {
     position: relative;
-    background: url('/main_bg.png') no-repeat center center/cover;
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+}
+
+.heroBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.textAnimationSection {
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    background-color: transparent;
+    padding-top: 15vh;
+    /* Push down into black space */
+    padding-bottom: 5rem;
+    z-index: 5;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 10vw;
+    align-items: center;
+}
+
+.bgImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
 }
 
 .heroOverlay {
@@ -22,109 +49,172 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(17, 17, 17, 0.95) 100%);
     z-index: 1;
 }
 
 .heroContent {
     position: relative;
-    z-index: 2;
+    z-index: 5;
     width: 100%;
-    margin-top: 4rem;
-    /* Adjust for header */
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
 }
 
-.heroTitle {
-    font-size: 8rem;
-    font-weight: 300;
-    line-height: 0.85;
-    letter-spacing: -0.02em;
-    margin-bottom: 3rem;
-    color: #fff;
+.badgeRow {
+    position: absolute;
+    top: 15vh;
+    left: 5vw;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.heroSubtitle {
-    font-weight: 700;
-    margin-left: 25%;
-    /* Indent "OF IDEA" */
-    display: block;
+.badge {
+    background-color: var(--accent-green, #39ff14);
+    color: #000;
+    padding: 0.3rem 0.8rem;
+    font-weight: 800;
+    font-size: 0.75rem;
+    display: inline-block;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-.heroDescBox {
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    padding-top: 2rem;
-    max-width: 600px;
-}
-
-.heroDesc {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #ccc;
-    word-break: keep-all;
-}
-
-.heroDesc strong {
-    color: #fff;
-    font-weight: 700;
-}
-
-
-/* Values */
-.valuesSection {
-    padding: 8rem 10vw;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
-    background-color: #111;
-}
-
-.valueTitle {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: #fff;
+/* Large Text Rows */
+.heroRow {
+    width: 100%;
+    display: flex;
+    align-items: center;
     position: relative;
 }
 
-.valueTitle::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    width: 30px;
-    height: 2px;
-    background-color: #fff;
+.heroRow.top {
+    justify-content: flex-start;
+}
+
+.heroRow.bottom {
+    justify-content: flex-end;
+}
+
+.bigText {
+    font-size: clamp(4rem, 14vw, 15rem);
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+    background: linear-gradient(180deg, #ffffff 40%, #555555 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+}
+
+.horizontalLine {
+    height: 1.5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    flex-grow: 1;
+}
+
+.top .horizontalLine {
+    margin-left: 3rem;
+}
+
+.bottom .horizontalLine {
+    margin-right: 3rem;
+}
+
+.introRow {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.heroIntroBox {
+    max-width: 1000px;
+    text-align: left;
+    padding-left: 20%;
+    /* Align with screenshot 2 */
+}
+
+.heroIntroText {
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1.8;
+    color: #fff;
+    word-break: keep-all;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.heroIntroText strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Values */
+.valuesSection {
+    padding: 10rem 10vw;
+    background-color: #222;
+}
+
+.valuesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.valueCol {
+    display: flex;
+    flex-direction: column;
+}
+
+.valueTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #fff;
 }
 
 .valueText {
     font-size: 0.95rem;
-    line-height: 1.7;
-    color: #aaa;
+    line-height: 1.8;
+    color: #888;
     word-break: keep-all;
+    font-weight: 300;
 }
 
 /* Stats */
 .statsSection {
-    padding: 8rem 10vw;
-    background-color: #1a1a1a;
+    padding: 10rem 5vw;
+    background-color: #111;
 }
 
-.statsMainTitle {
-    font-size: 1.8rem;
+.statsInner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.statsHeadline {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
     font-weight: 700;
-    margin-bottom: 5rem;
-    line-height: 1.4;
+    line-height: 1.3;
     color: #fff;
+    margin-bottom: 8rem;
+    letter-spacing: -0.02em;
 }
 
-.statsGridMain {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 5rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 4rem;
+.statsMainNumbers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    margin-bottom: 6rem;
 }
 
 .statMainItem {
@@ -132,281 +222,293 @@
     flex-direction: column;
 }
 
-.statSubGroup {
-    display: flex;
-    gap: 5rem;
+.statLabel {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
 }
 
-.statSubItem {
+.statNum {
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.statNumberBlock {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
-.statLabel {
-    font-size: 1rem;
-    font-weight: 700;
+.subNum {
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
     color: #fff;
-    margin-bottom: 0.5rem;
-    display: block;
+    margin-top: -1rem;
+    /* tight packing like design */
 }
 
-.statValueBig {
-    font-size: 8rem;
-    font-weight: 700;
-    line-height: 0.9;
-    color: #fff;
-}
-
-.statValueMedium {
-    font-size: 5rem;
-    font-weight: 700;
-    line-height: 0.9;
-    color: #666;
-    /* Dimmer per design */
-    -webkit-text-stroke: 1px #888;
+.statNumOutline {
     color: transparent;
-    /* Outline effect possibility */
-    color: #666;
-    /* Fallback */
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
 }
 
-.statValueBig small,
-.statValueMedium small {
+.statNum span {
     font-size: 1.5rem;
-    margin-left: 0.5rem;
     font-weight: 400;
-    color: #888;
-}
-
-.statSubText {
-    font-size: 1.5rem;
     color: #fff;
-    font-weight: 700;
-    text-align: right;
-    display: none;
-    /* Hide confusing numbers from image for now */
+    margin-left: 0.5rem;
 }
 
-.statsGridSub {
+.statsCategoryGrid {
+    background-color: transparent;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    border-top: 1px solid #333;
+    border-left: 1px solid #333;
 }
 
-.statDetailItem {
-    background: #252525;
-    padding: 1.2rem;
-    color: #aaa;
-    font-size: 0.9rem;
+.statCatItem {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    position: relative;
 }
 
-.statDetailItem strong {
-    color: #fff;
+.statCatItem::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1px;
+    height: 12px;
+    background-color: #555;
+}
+
+.statCatName {
     font-weight: 700;
+    color: #fff;
+    font-size: 0.95rem;
+    text-align: right;
+    width: 45%;
+}
+
+.statCatDivider {
+    color: #444;
+    margin: 0 0.5rem;
+}
+
+.statCatCount {
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+    width: 45%;
 }
 
 
 /* History */
 .historySection {
-    padding: 8rem 10vw;
-    background-color: #151515;
+    padding: 10rem 5vw;
+    background-color: #181818;
+    position: relative;
+    overflow: hidden;
 }
 
-.sectionTitle {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 4rem;
+.historyTitle {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
     color: #fff;
-    text-transform: uppercase;
+    margin-bottom: 10rem;
+    text-align: left;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 5vw;
+    letter-spacing: 0.05em;
 }
 
-.yearList {
+.historyLayout {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    height: 600px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem 2rem;
-    font-size: 5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.historyYearsBg {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    z-index: 0;
+    padding: 0 2rem;
+    pointer-events: none;
+}
+
+.yearTextBg {
+    font-size: clamp(6rem, 15vw, 12rem);
     font-weight: 900;
-    line-height: 1;
-    justify-content: flex-start;
-    font-family: 'Arial', sans-serif;
-    /* Blockier font */
-}
-
-.yearItem {
-    -webkit-text-stroke: 1px #444;
     color: transparent;
-    transition: all 0.3s;
-    cursor: default;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
 }
 
-.currentYear {
+.yearTextActive {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+}
+
+.historyDetailBox {
+    z-index: 5;
+    width: 90%;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 4rem;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
     color: #fff;
-    -webkit-text-stroke: 0;
+    opacity: 0.6;
+    cursor: pointer;
 }
 
-.yearItem:hover {
-    color: #fff;
-    -webkit-text-stroke: 0;
-}
-
-
-/* Life */
-.lifeSection {
-    padding: 8rem 10vw;
-    background-color: #111;
-}
-
-.lifeGrid {
+.boxGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 300px);
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
 }
 
-.lifeItem {
-    background-size: cover;
-    background-position: center;
+.boxCol h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.boxList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.boxList li {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.boxList li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #444;
+}
+
+.boxPagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+}
+
+.pageDot {
+    width: 40px;
+    height: 2px;
     background-color: #333;
 }
 
-/* Masonry layout simulation matching the image */
-/* Image shows:
-   [ Big Vertical ] [ Half Top ] [ Half Top ]
-   [ Big Vertical ] [ Half Bot ] [ Half Bot ]
-   Wait, it looks like:
-   [ Tall Left ] [ Top Right ]
-                 [ Bot Right ]
-   Actually looks like a collage.
-   Let's do:
-   [ Item 1 (Tall) ] [ Item 2 ] [ Item 3 ]
-   [ Item 1 (Tall) ] [ Item 4 ] [ Item 5 ]
-*/
-.lifeItem:nth-child(1) {
-    grid-column: 1 / 3;
-    grid-row: 1 / 3;
-    background-color: #2a2a2a;
+.pageDotActive {
+    background-color: #fff;
 }
-
-.lifeItem:nth-child(2) {
-    grid-column: 3 / 5;
-    grid-row: 1 / 2;
-    background-color: #333;
-}
-
-.lifeItem:nth-child(3) {
-    grid-column: 3 / 4;
-    grid-row: 2 / 3;
-    background-color: #3a3a3a;
-}
-
-.lifeItem:nth-child(4) {
-    grid-column: 4 / 5;
-    grid-row: 2 / 3;
-    background-color: #444;
-}
-
-.lifeItem:nth-child(5) {
-    display: none;
-}
-
-/* Only 4 needed for this layout? Image had 5. Let's adjust */
 
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .heroTitle {
-        font-size: 4rem;
+    .bgTextIdentity {
+        font-size: 15vw;
     }
 
-    .heroSubtitle {
-        margin-left: 0;
+    .bgTextOfId {
+        font-size: 12vw;
     }
 
-    .valuesSection {
+    .valuesGrid {
         grid-template-columns: 1fr;
         gap: 3rem;
     }
 
-    .statsGridMain {
-        flex-direction: column;
-        align-items: flex-start;
+    .statsMainNumbers {
+        grid-template-columns: 1fr;
         gap: 3rem;
     }
 
-    .statSubGroup {
-        width: 100%;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .statsGridSub {
+    .statsCategoryGrid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .yearList {
-        font-size: 3rem;
-    }
-
-    .lifeGrid {
+    .boxGrid {
         grid-template-columns: 1fr;
-        grid-template-rows: auto;
+        gap: 2rem;
     }
 
-    .lifeItem:nth-child(1) {
-        grid-column: auto;
-        grid-row: auto;
-        height: 300px;
+    .historyLayout {
+        height: auto;
+        padding-top: 10rem;
     }
 
-    .lifeItem:nth-child(2) {
-        grid-column: auto;
-        grid-row: auto;
-        height: 250px;
-    }
-
-    .lifeItem:nth-child(3) {
-        grid-column: auto;
-        grid-row: auto;
-        height: 250px;
-    }
-
-    .lifeItem:nth-child(4) {
-        grid-column: auto;
-        grid-row: auto;
-        height: 250px;
+    .historyYearsBg {
+        top: 0;
+        transform: none;
     }
 }
 
 @media (max-width: 768px) {
-    .sectionTitle {
-        margin-bottom: 2rem;
-        font-size: 1.5rem;
+    .heroIntroBox {
+        margin-top: 5rem;
     }
 
-    .statsMainTitle {
-        font-size: 1.25rem;
+    .statsHeadline {
+        margin-bottom: 4rem;
     }
 
-    .statValueBig {
+    .statNum {
         font-size: 4rem;
     }
 
-    .statValueMedium {
-        font-size: 2.5rem;
+    .statsCategoryGrid {
+        grid-template-columns: 1fr;
     }
 
-    .hero {
-        padding: 0 5vw;
-    }
-
-    .valuesSection,
-    .statsSection,
-    .historySection,
-    .lifeSection {
-        padding: 4rem 5vw;
+    .historyDetailBox {
+        padding: 2rem;
     }
 }

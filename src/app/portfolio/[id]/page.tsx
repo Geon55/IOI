@@ -1,77 +1,115 @@
-
 "use client";
-import React, { use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import styles from './page.module.css';
+import { supabase } from '@/lib/supabase';
 
-// Mock Data for detailed view - In a real app, this would be fetched from an API or database
-const projectDetails = {
-    id: 1,
-    title: '울진 대왕소나무 쉼터 조성',
-    engTitle: 'Uljin King Pine Shelter',
-    category: 'Environment Design',
-    client: 'Uljin-gun',
-    location: 'Gyeongsangbuk-do, Korea',
-    date: '2024.10.11 - 2024.12.10',
-    description: `
-        울진 금강소나무 숲길의 상징적인 대왕소나무를 조망할 수 있는 쉼터 공간을 조성하였습니다.
-        자연 경관을 해치지 않으면서 방문객들이 편안하게 휴식하고 소나무의 웅장함을 감상할 수 있도록
-        친환경적인 소재와 디자인을 적용했습니다.
-        
-        주요 특징으로는 소나무의 솔방울을 형상화한 조형 벤치와 자연스러운 곡선의 데크 로드가 있으며,
-        주변 식생과의 조화를 최우선으로 고려하여 설계되었습니다.
-    `,
-    mainImage: 'https://images.unsplash.com/photo-1545639360-32389d46944e?q=80&w=1200&fit=crop', // Replace with high-res
-    gallery: [
-        'https://images.unsplash.com/photo-1519782806259-7f5bda395a12?q=80&w=800&fit=crop',
-        'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=800&fit=crop',
-        'https://images.unsplash.com/photo-1595842851892-0b1548232961?q=80&w=800&fit=crop',
-    ],
-    processImages: [
-        'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600&fit=crop', // factory/process
-        'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=600&fit=crop'
-    ]
+// Helper component for Other Projects
+const AnotherProjects = () => {
+    const [others, setOthers] = useState<any[]>([]);
+    useEffect(() => {
+        const fetchOthers = async () => {
+            const { data } = await supabase.from('portfolio').select('id, title, main_image').limit(3).order('created_at', { ascending: false });
+            if (data) setOthers(data);
+        };
+        fetchOthers();
+    }, []);
+
+    if (others.length === 0) return null;
+    return (
+        <div className={styles.anotherSection}>
+            <h3 className={styles.anotherTitle}>Another Project</h3>
+            <div className={styles.anotherGrid}>
+                {others.map(item => (
+                    <Link href={`/portfolio/${item.id}`} key={item.id} className={styles.anotherItem}>
+                        <div className={styles.anotherImageWrapper}>
+                            {item.main_image ? (
+                                <img src={item.main_image} alt={item.title} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                            ) : (
+                                <div style={{ width: '100%', aspectRatio: '4/3', backgroundColor: '#333' }} />
+                            )}
+                        </div>
+                        <div className={styles.anotherLabel}>{item.title}</div>
+                    </Link>
+                ))}
+            </div>
+        </div>
+    );
 };
 
-const anotherProjects = [
-    { id: 2, src: 'https://images.unsplash.com/photo-1544465544-1571a6305286?q=80&w=400&fit=crop', title: 'Garden Project' },
-    { id: 3, src: 'https://images.unsplash.com/photo-1557088921-17796d884742?q=80&w=400&fit=crop', title: 'Brand Identity' },
-    { id: 4, src: 'https://images.unsplash.com/photo-1616763435427-4a1599547d7c?q=80&w=400&fit=crop', title: 'Interior Design' },
-];
-
 export default function PortfolioDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    // In Next.js 15, params is a Promise. We need to unwrap it.
-    // However, since we are using "use client", we can use React.use() to unwrap the promise
-    // strictly speaking, useParams hook is often better for client components,
-    // but the props structure suggests Server Component usage.
-    // Since we marked "use client", let's use the provided hook or just await it if it was a server component.
-    // For standard Next.js 15 client component with dynamic route:
-
-    // Simplification for this demo:
-    // We will assume id accesses project details.
-    // Using a simple hook-like access for params if using `use` from React (Scanvenger hunt: `React.use` is available in latest React/Next versions)
-
     const { id } = use(params);
+    const [project, setProject] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // In a real scenario, use `id` to fetch specific data. layout
-    // For now, we utilize the static `projectDetails` object for ALL IDs to match the reference design.
+    useEffect(() => {
+        const fetchProjectDetails = async () => {
+            setIsLoading(true);
+            const { data, error } = await supabase
+                .from('portfolio')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (!error && data) {
+                setProject({ ...data, more_info: '' });
+            }
+            setIsLoading(false);
+        };
+        fetchProjectDetails();
+    }, [id]);
+
+    if (isLoading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#333', color: '#fff' }}>데이터를 불러오는 중입니다...</div>;
+
+    if (!project) {
+        return (
+            <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#333', color: '#fff' }}>
+                <p style={{ marginBottom: '1rem' }}>포트폴리오를 찾을 수 없습니다.</p>
+                <Link href="/portfolio" className={styles.backButton}><ArrowLeft size={16} /> Back to List</Link>
+            </div>
+        );
+    }
+
+    let contentBlocks = Array.isArray(project.content_blocks) ? project.content_blocks : [];
+
+    // Extract metadata block if it exists
+    const metadataBlockIndex = contentBlocks.findIndex((b: any) => b.type === 'metadata');
+    if (metadataBlockIndex !== -1) {
+        try {
+            const extraData = JSON.parse(contentBlocks[metadataBlockIndex].content);
+            if (extraData.client) project.client = extraData.client;
+            if (extraData.location) project.location = extraData.location;
+            if (extraData.date) project.date = extraData.date;
+            if (extraData.more_info) project.more_info = extraData.more_info;
+            if (extraData.hero_image) project.hero_image = extraData.hero_image;
+            if (extraData.making_process) project.making_process = extraData.making_process;
+        } catch (e) {
+            console.error('Failed to parse metadata block');
+        }
+        // Remove metadata block so it doesn't render normally
+        contentBlocks = contentBlocks.filter((_: any, idx: number) => idx !== metadataBlockIndex);
+    }
 
     return (
         <div className={styles.container}>
-            {/* Header / Back Button */}
+            {/* Header / Back Button Spacer */}
             <div className={styles.headerSpacer}></div>
 
             {/* Hero Image */}
             <div className={styles.heroSection}>
-                <Image
-                    src={projectDetails.mainImage}
-                    alt={projectDetails.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                />
+                {(project.hero_image || project.main_image) ? (
+                    <img src={project.hero_image || project.main_image} alt={project.title} style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '90vh', objectFit: 'contain', backgroundColor: '#222' }} />
+                ) : (
+                    <div style={{ width: '100%', height: '80vh', backgroundColor: '#444' }} />
+                )}
+
+                {/* Overlay details */}
+                <div className={styles.heroOverlay}>
+                    <div className={styles.badge}>Portfolio / Detail</div>
+                    <div className={styles.heroTitle}>{project.title}</div>
+                </div>
             </div>
 
             {/* Info Section */}
@@ -79,115 +117,122 @@ export default function PortfolioDetailPage({ params }: { params: Promise<{ id: 
                 <div className={styles.infoGrid}>
                     <div className={styles.infoLeft}>
                         <h1 className={styles.projectTitle}>
-                            {projectDetails.title}
-                            <span className={styles.engTitle}>{projectDetails.engTitle}</span>
+                            {project.title}
+                            {project.eng_title && <span className={styles.engTitle}>{project.eng_title}</span>}
                         </h1>
                         <div className={styles.metaInfo}>
-                            <div className={styles.metaItem}>
-                                <span className={styles.metaLabel}>Client</span>
-                                <span className={styles.metaValue}>{projectDetails.client}</span>
-                            </div>
-                            <div className={styles.metaItem}>
-                                <span className={styles.metaLabel}>Location</span>
-                                <span className={styles.metaValue}>{projectDetails.location}</span>
-                            </div>
-                            <div className={styles.metaItem}>
-                                <span className={styles.metaLabel}>Date</span>
-                                <span className={styles.metaValue}>{projectDetails.date}</span>
-                            </div>
+                            {project.client && (
+                                <div className={styles.metaItem}><span className={styles.metaLabel}>Client:</span> <span className={styles.metaValue}>{project.client}</span></div>
+                            )}
+                            {project.date && (
+                                <div className={styles.metaItem}><span className={styles.metaLabel}>Date:</span> <span className={styles.metaValue}>{project.date}</span></div>
+                            )}
+                            {project.creative_director && (
+                                <div className={styles.metaItem}><span className={styles.metaLabel}>Creative Director:</span> <span className={styles.metaValue}>{project.creative_director}</span></div>
+                            )}
+                            {project.design && (
+                                <div className={styles.metaItem}><span className={styles.metaLabel}>Design:</span> <span className={styles.metaValue}>{project.design}</span></div>
+                            )}
                         </div>
                     </div>
                     <div className={styles.infoRight}>
-                        <div className={styles.description}>
-                            {projectDetails.description.split('\n').map((line, i) => (
-                                <p key={i}>{line}</p>
-                            ))}
-                        </div>
-                        <div className={styles.shareButtons}>
-                            <button className={styles.shareBtn}>Share Project ↗</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Gallery Section */}
-            <div className={styles.gallerySection}>
-                {/* Large Featured Image */}
-                <div className={styles.featuredImage}>
-                    <Image
-                        src={projectDetails.gallery[0]}
-                        alt="Gallery 1"
-                        fill
-                        style={{ objectFit: 'cover' }}
-                    />
-                    <div className={styles.imageOverlayText}>울진 대왕소나무</div>
-                </div>
-
-                {/* Grid Images */}
-                <div className={styles.galleryGrid}>
-                    <div className={styles.gridImageItem}>
-                        <Image
-                            src={projectDetails.gallery[1]}
-                            alt="Gallery 2"
-                            fill
-                            style={{ objectFit: 'cover' }}
-                        />
-                    </div>
-                    <div className={styles.gridImageItem}>
-                        <Image
-                            src={projectDetails.gallery[2]}
-                            alt="Gallery 3"
-                            fill
-                            style={{ objectFit: 'cover' }}
-                        />
-                    </div>
-                </div>
-            </div>
-
-            {/* Concept / Process Text */}
-            <div className={styles.conceptSection}>
-                <h2 className={styles.conceptTitle}>Making Process</h2>
-                <p className={styles.conceptDesc}>
-                    현장의 특성을 고려하여 자재 선정부터 시공까지 꼼꼼하게 진행합니다.
-                    자연 환경 속에서의 작업인 만큼 안전과 환경 보호를 최우선으로 하였습니다.
-                </p>
-            </div>
-
-            {/* Process Images */}
-            <div className={styles.processSection}>
-                {projectDetails.processImages.map((src, i) => (
-                    <div key={i} className={styles.processImage}>
-                        <Image src={src} alt={`Process ${i}`} fill style={{ objectFit: 'cover' }} />
-                    </div>
-                ))}
-            </div>
-
-            {/* Blueprints / Technical Drawings Placeholder */}
-            <div className={styles.blueprintSection}>
-                <div className={styles.blueprintPlaceholder} />
-                <div className={styles.blueprintPlaceholder} />
-            </div>
-
-
-            {/* Another Project */}
-            <div className={styles.anotherSection}>
-                <h3 className={styles.anotherTitle}>Another Project</h3>
-                <div className={styles.anotherGrid}>
-                    {anotherProjects.map((proj) => (
-                        <Link href={`/portfolio/${proj.id}`} key={proj.id} className={styles.anotherItem}>
-                            <div className={styles.anotherImageWrapper}>
-                                <Image src={proj.src} alt={proj.title} fill style={{ objectFit: 'cover' }} />
+                        <div className={styles.summaryRow}>
+                            <span className={styles.summaryLabel}>Summary</span>
+                            <div className={styles.summaryText}>
+                                {project.summary ? (
+                                    project.summary.split('\n').map((line: string, i: number) => <p key={i}>{line}</p>)
+                                ) : (
+                                    <p>상세 요약이 없습니다.</p>
+                                )}
                             </div>
-                            <div className={styles.anotherLabel}>{proj.title}</div>
-                        </Link>
-                    ))}
+                        </div>
+
+                        {project.more_info && (
+                            <div className={styles.summaryRow} style={{ marginTop: '3rem' }}>
+                                <span className={styles.summaryLabel}>More Info</span>
+                                <div className={styles.summaryText}>
+                                    {project.more_info.split('\n').map((line: string, i: number) => <p key={i}>{line}</p>)}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <div style={{ marginTop: '4rem', textAlign: 'center' }}>
-                <Link href="/portfolio" className={styles.backButton}>
-                    <ArrowLeft size={16} /> Back to List
-                </Link>
+            {/* Making Process Section */}
+            {project.making_process && (
+                <div className={styles.makingProcessSection}>
+                    <h2 className={styles.makingProcessTitle}>Making Process</h2>
+                    <div className={styles.makingProcessText}>
+                        {project.making_process.split('\n').map((line: string, i: number) => <p key={i}>{line}</p>)}
+                    </div>
+                </div>
+            )}
+
+            {/* Content Blocks (Images & Text) */}
+            <div className={styles.blocksSection}>
+                {(() => {
+                    const rendered: React.ReactNode[] = [];
+                    let imageGroup: any[] = [];
+
+                    const flushImages = () => {
+                        if (imageGroup.length > 0) {
+                            rendered.push(
+                                <div className={styles.collageGroup} key={`group-${rendered.length}`}>
+                                    {imageGroup.map((blk, i) => {
+                                        let flexG = 1;
+                                        if (blk.aspectRatio && blk.aspectRatio !== 'auto') {
+                                            const parts = blk.aspectRatio.split('/');
+                                            if (parts.length === 2) {
+                                                flexG = parseFloat(parts[0]) / parseFloat(parts[1]);
+                                            } else {
+                                                flexG = parseFloat(blk.aspectRatio) || 1;
+                                            }
+                                        }
+                                        return (
+                                            <div key={i} className={styles.collageItem} style={{
+                                                flexGrow: flexG * 100,
+                                                flexBasis: `${flexG * 250}px`,
+                                                aspectRatio: blk.aspectRatio && blk.aspectRatio !== 'auto' ? blk.aspectRatio : '1 / 1'
+                                            }}>
+                                                <img
+                                                    src={blk.content}
+                                                    alt={`collage-${i}`}
+                                                    className={styles.collageImg}
+                                                    style={{ objectFit: 'cover' }}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                            imageGroup = [];
+                        }
+                    };
+
+                    contentBlocks.forEach((block: any, idx: number) => {
+                        if (block.type === 'image') {
+                            imageGroup.push(block);
+                        } else if (block.type === 'text') {
+                            flushImages();
+                            rendered.push(
+                                <div key={idx} className={styles.blockTextWrapper}>
+                                    <div className={styles.blockTextContent}>
+                                        {block.content.split('\n').map((line: string, i: number) => <p key={i}>{line}</p>)}
+                                    </div>
+                                </div>
+                            );
+                        }
+                    });
+                    flushImages();
+                    return rendered;
+                })()}
+            </div>
+
+            <AnotherProjects />
+
+            <div style={{ textAlign: 'center', padding: '4rem 0', backgroundColor: '#333' }}>
+                <Link href="/portfolio" className={styles.backButton}><ArrowLeft size={16} /> Back to List</Link>
             </div>
         </div>
     );

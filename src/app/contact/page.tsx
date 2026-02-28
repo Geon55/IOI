@@ -1,7 +1,12 @@
-
 "use client";
 import React, { useState } from 'react';
+import { motion, Variants } from 'framer-motion';
 import styles from './page.module.css';
+
+const fadeInUp: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
 
 const services = [
     '조형물', '환경 디자인', '공공 디자인', '학술 연구', '지원 사업', '사인물',
@@ -17,6 +22,7 @@ export default function ContactPage() {
         email: '',
         content: ''
     });
+    const [attachedFile, setAttachedFile] = useState<File | null>(null);
 
     const toggleService = (service: string) => {
         if (selectedServices.includes(service)) {
@@ -31,31 +37,79 @@ export default function ContactPage() {
         setForm(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setAttachedFile(e.target.files[0]);
+        } else {
+            setAttachedFile(null);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // In a real app, you would send this data to Supabase or an API
-        console.log({ selectedServices, ...form });
-        alert('문의가 접수되었습니다. 곧 연락드리겠습니다.');
+
+        try {
+            const formData = new FormData();
+            formData.append('services', selectedServices.join(', '));
+            formData.append('company', form.company);
+            formData.append('manager', form.manager);
+            formData.append('contact', form.contact);
+            formData.append('email', form.email);
+            formData.append('content', form.content);
+            if (attachedFile) {
+                formData.append('file', attachedFile);
+            }
+
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            }
+
+            alert('문의가 접수되었습니다. 곧 연락드리겠습니다.');
+
+            // 초기화
+            setForm({ company: '', manager: '', contact: '', email: '', content: '' });
+            setSelectedServices([]);
+            setAttachedFile(null);
+
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('메시지 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        }
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.inner}>
-                {/* Hero Section */}
+                {/* 1. Hero Section */}
                 <section className={styles.hero}>
-                    <div className={styles.badge}>Contact</div>
-                    <h1 className={styles.titleMain}>Hello.</h1>
-                    <h2 className={styles.titleSub}>무엇을<br />도와드릴까요?</h2>
-                    <p className={styles.description}>원하시는 서비스를 선택해주세요.(다중 선택 가능, 선택지 외 서비스 문의는 내용에 기입해주세요.)</p>
+                    <div className={styles.heroContent}>
+                        <motion.div className={styles.badge} variants={fadeInUp} initial="hidden" animate="visible">
+                            Contact
+                        </motion.div>
 
-                    {/* Service Selection Buttons */}
+                        <motion.div className={styles.titleMain} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.3 }}>
+                            <span className={styles.helloText}>Hello.</span>
+                            <span className={styles.titleSub}>무엇을</span>
+                            도와드릴까요?
+
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* Service Selection Section */}
+                <section style={{ marginBottom: '6rem' }}>
+                    <p className={styles.description}>원하시는 서비스를 선택해주세요.(다중 선택 가능, 선택지 외 서비스 문의는 내용에 기입해주세요.)</p>
                     <div className={styles.serviceButtons}>
                         {services.map((service, index) => (
                             <button
                                 key={index}
                                 className={`${styles.serviceBtn} ${selectedServices.includes(service) ? styles.serviceBtnActive : ''}`}
                                 onClick={() => toggleService(service)}
-                                style={selectedServices.includes(service) ? { background: '#d1d1d1', color: '#000', fontWeight: 'bold' } : {}}
                             >
                                 {service}
                             </button>
@@ -118,8 +172,18 @@ export default function ContactPage() {
                             <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <label className={styles.label}>문의내용</label>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <label className={styles.label} style={{ marginRight: '2rem' }}>첨부파일</label>
+                                    <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                        <div style={{ position: 'relative' }}>
+                                            <input
+                                                type="file"
+                                                id="fileUpload"
+                                                onChange={handleFileChange}
+                                                style={{ display: 'none' }}
+                                            />
+                                            <label htmlFor="fileUpload" className={styles.label} style={{ cursor: 'pointer', margin: 0, textDecoration: 'underline' }}>
+                                                첨부파일 {attachedFile ? `[ ${attachedFile.name} ]` : ''}
+                                            </label>
+                                        </div>
                                         <span className={styles.fileUploadDesc}>50MB이하로 보내주세요.</span>
                                     </div>
                                 </div>

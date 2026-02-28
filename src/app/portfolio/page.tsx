@@ -1,39 +1,94 @@
-
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import { supabase } from '@/lib/supabase';
 
-const categories = ['ALL', '조형물', '환경디자인', '브랜딩', '전시·인테리어', '이벤트·행사', '학술 연구'];
+const categories = ['ALL', '환경디자인', '조형물', '브랜딩', '전시·인테리어', '이벤트·행사', '학술 연구'];
 
-const portfolioItems = [
-    // 1st Row
-    { id: 1, src: 'https://images.unsplash.com/photo-1545639360-32389d46944e?q=80&w=400&fit=crop', category: '조형물', title: 'Public Sculpture 1' },
-    { id: 2, src: 'https://images.unsplash.com/photo-1519782806259-7f5bda395a12?q=80&w=400&fit=crop', category: '환경디자인', title: 'Eco Design 1' },
-    { id: 3, src: 'https://images.unsplash.com/photo-1557088921-17796d884742?q=80&w=400&fit=crop', category: '브랜딩', title: 'Brand Identity 1' },
-    { id: 4, src: 'https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=400&fit=crop', category: '전시·인테리어', title: 'Exhibition 1' },
-    // 2nd Row
-    { id: 5, src: 'https://images.unsplash.com/photo-1595842851892-0b1548232961?q=80&w=400&fit=crop', category: '이벤트·행사', title: 'Event 1' },
-    { id: 6, src: 'https://images.unsplash.com/photo-1473216892809-ff513271cc29?q=80&w=400&fit=crop', category: '학술 연구', title: 'Research 1' },
-    { id: 7, src: 'https://images.unsplash.com/photo-1579202673506-ca3ce28f52f3?q=80&w=400&fit=crop', category: '조형물', title: 'Public Sculpture 2' },
-    { id: 8, src: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&fit=crop', category: '환경디자인', title: 'Eco Design 2' },
-    // 3rd Row
-    { id: 9, src: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=400&fit=crop', category: '브랜딩', title: 'Brand Identity 2' },
-    { id: 10, src: 'https://images.unsplash.com/photo-1616763435427-4a1599547d7c?q=80&w=400&fit=crop', category: '전시·인테리어', title: 'Interior 1' },
-    { id: 11, src: 'https://images.unsplash.com/photo-1544465544-1571a6305286?q=80&w=400&fit=crop', category: '이벤트·행사', title: 'Event 2' },
-    { id: 12, src: 'https://images.unsplash.com/photo-1517436073-3b1b193424cb?q=80&w=400&fit=crop', category: '학술 연구', title: 'Research 2' },
-    // 4th Row
-    { id: 13, src: 'https://images.unsplash.com/photo-1575995941656-787be7257006?q=80&w=400&fit=crop', category: '조형물', title: 'Public Sculpture 3' },
-    { id: 14, src: 'https://images.unsplash.com/photo-1520696989437-010adbd25712?q=80&w=400&fit=crop', category: '환경디자인', title: 'Eco Design 3' },
-    { id: 15, src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=400&fit=crop', category: '브랜딩', title: 'Brand Identity 3' },
-    { id: 16, src: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=400&fit=crop', category: '학술 연구', title: 'Research 3' },
-];
+type Portfolio = {
+    id: number;
+    title: string;
+    category: string;
+    main_image: string;
+    aspect_ratio: string;
+};
 
 export default function PortfolioPage() {
+    const router = useRouter();
     const [activeCategory, setActiveCategory] = useState('ALL');
+    const [portfolioItems, setPortfolioItems] = useState<Portfolio[]>([]);
+    const [categoryContent, setCategoryContent] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        fetchPortfolios();
+    }, []);
+
+    useEffect(() => {
+        if (activeCategory !== 'ALL') {
+            fetchCategoryContent(activeCategory);
+        } else {
+            setCategoryContent(null);
+        }
+    }, [activeCategory]);
+
+    const handleSearch = () => {
+        if (searchTerm.trim() === '나는 관리자야') {
+            const pwd = window.prompt("관리자 비밀번호를 입력하세요.");
+            if (pwd === "1234") {
+                router.push("/admin");
+            } else if (pwd !== null) {
+                alert("비밀번호가 틀렸습니다.");
+            }
+        }
+    };
+
+    const fetchCategoryContent = async (categoryName: string) => {
+        // Map Korean category name to section_id
+        const map: Record<string, string> = {
+            '조형물': 'category_sculpture',
+            '환경디자인': 'category_environment',
+            '브랜딩': 'category_branding',
+            '전시·인테리어': 'category_exhibition',
+            '이벤트·행사': 'category_event',
+            '학술 연구': 'category_research'
+        };
+        const sectionId = map[categoryName];
+        if (!sectionId) return;
+
+        const { data, error } = await supabase
+            .from('site_content')
+            .select('*')
+            .eq('section_id', sectionId)
+            .single();
+
+        if (data && !error) {
+            setCategoryContent(data);
+        } else {
+            setCategoryContent(null);
+        }
+    };
+
+    const fetchPortfolios = async () => {
+        setIsLoading(true);
+        const { data, error } = await supabase
+            .from('portfolio')
+            .select('id, title, category, main_image, aspect_ratio')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching portfolios:', error);
+        } else {
+            setPortfolioItems(data || []);
+        }
+        setIsLoading(false);
+    };
 
     const filteredItems = activeCategory === 'ALL'
         ? portfolioItems
@@ -72,8 +127,14 @@ export default function PortfolioPage() {
                 <main className={styles.mainContent}>
                     {/* Search Bar */}
                     <div className={styles.searchBarWrapper}>
-                        <div className={styles.searchBar}>
-                            <button disabled className={styles.searchIcon} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                        <form
+                            className={styles.searchBar}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSearch();
+                            }}
+                        >
+                            <button type="submit" className={styles.searchIcon} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
                                 <Search size={18} />
                             </button>
                             <input
@@ -81,25 +142,56 @@ export default function PortfolioPage() {
                                 placeholder="필요하신 서비스명 검색하세요."
                                 className={styles.searchInput}
                                 style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', marginLeft: '0.5rem' }}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                        </div>
+                        </form>
                     </div>
 
+                    {/* Category Details Banner (Dynamic from site_content) */}
+                    {activeCategory !== 'ALL' && (
+                        <div style={{ marginBottom: '3rem', opacity: isLoading ? 0.5 : 1, transition: 'opacity 0.3s' }}>
+                            {categoryContent?.image_url && (
+                                <div style={{ position: 'relative', width: '100%', height: '300px', marginBottom: '2rem', borderRadius: '0.5rem', overflow: 'hidden' }}>
+                                    <Image src={categoryContent.image_url} alt={categoryContent.title || activeCategory} fill style={{ objectFit: 'cover' }} />
+                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.8), transparent)' }}></div>
+                                </div>
+                            )}
+
+                            <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem', color: '#fff' }}>
+                                {categoryContent?.title || activeCategory}
+                            </h2>
+
+                            {categoryContent?.description && (
+                                <p style={{ fontSize: '1.1rem', color: '#aaa', lineHeight: 1.6, maxWidth: '800px', whiteSpace: 'pre-wrap' }}>
+                                    {categoryContent.description}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
                     {/* Image Grid */}
-                    <div className={styles.galleryGrid}>
-                        {filteredItems.map((item) => (
-                            <Link href={`/portfolio/${item.id}`} key={item.id} className={styles.galleryItem}>
-                                <Image
-                                    src={item.src}
-                                    alt={item.title}
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                />
-                                <div className={styles.itemLabel}>{item.title}</div>
-                            </Link>
-                        ))}
-                    </div>
+                    {isLoading ? (
+                        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>데이터를 불러오는 중입니다...</div>
+                    ) : (
+                        <div className={styles.galleryGrid}>
+                            {filteredItems.map((item) => (
+                                <Link href={`/portfolio/${item.id}`} key={item.id} className={styles.galleryItem}>
+                                    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'block' }}>
+                                        <img
+                                            src={item.main_image || 'https://images.unsplash.com/photo-1545639360-32389d46944e?q=80&w=400&fit=crop'}
+                                            alt={item.title}
+                                            className={styles.galleryImage}
+                                        />
+                                    </div>
+                                    <div className={styles.itemLabel}>{item.title}</div>
+                                </Link>
+                            ))}
+                            {filteredItems.length === 0 && (
+                                <div style={{ gridColumn: '1 / -1', padding: '2rem', textAlign: 'center', color: '#666' }}>등록된 포트폴리오가 없습니다.</div>
+                            )}
+                        </div>
+                    )}
                 </main>
             </div>
         </div>

@@ -1,386 +1,255 @@
-
 "use client";
+
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import styles from './page.module.css';
 
-const tabs = [
-    '환경 조형물', '환경 디자인', '브랜딩', '전시·인테리어', '학술 연구', '지원 사업', '이벤트·행사'
+// 탭 데이타 정의 (5장 스크린샷 바탕)
+const TAB_DATA = [
+    {
+        id: 'env_sculpture',
+        label: '환경 조형물',
+        enTitle: 'Enviroment Sculpture',
+        koTitle: '환경 조형물',
+        desc: '환경 조형물은 3가지 테마로 분류하여 디자인 설계 및 제작, 설치를 진행합니다.',
+        process: ['타당성 검토', '디자인 개발', '실시 설계', '조형물 제작', '현장 설치', '유지 보수'],
+        images: [
+            'https://images.unsplash.com/photo-1558280696-6db244c015b6?q=80&w=600&fit=crop', // 상징 조형물
+            'https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=600&fit=crop', // 미술 작품
+            'https://images.unsplash.com/photo-1522885147691-06d859633fb8?q=80&w=600&fit=crop'  // 사이니지
+        ],
+        layout: 'grid-3',
+        footerCols: [
+            { title: '상징 조형물', text: '지역과 기업, 지자체 및\n각종 단체의 대표성과\n상징성을 담은 조형물' },
+            { title: '미술 작품', text: '문화예술진흥조례에\n따라 건축물에\n설치되는 미술장식품' },
+            { title: '조형 사인물', text: '옥외광고물 설치 시\n조형성을 갖춘\n조형 사인물' }
+        ]
+    },
+    {
+        id: 'env_design',
+        label: '환경 디자인',
+        enTitle: 'Enviroment Design',
+        koTitle: '환경 디자인',
+        desc: '환경 디자인은 3가지 테마로 분류하여 디자인 설계 및 제작, 설치를 진행합니다.',
+        process: ['타당성 검토', '디자인 개발', '실시 설계', '조형물 제작', '현장 설치', '유지 보수'],
+        images: [
+            'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600&fit=crop',
+            'https://images.unsplash.com/photo-1524813686514-a57563d77965?q=80&w=600&fit=crop',
+            'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=600&fit=crop'
+        ],
+        layout: 'grid-3',
+        footerCols: [
+            { title: '공공디자인', text: '거리·골목·보행환경\n공공시설물(벤치, 쉘터, 가로등 등)\n셉테드(CPTED) 안전환경디자인\n생활환경 개선(벽면, 담장, 골목경관 등)' },
+            { title: '시각·정보환경디자인', text: '종합안내판, WAYFINDING\n공공사인시스템\n관광·문화정보 디자인\n공공브랜딩(BI/CI, 공간그래픽 등)' },
+            { title: '공간·경험환경디자인', text: '전시연출 및 콘텐츠\n체험·교육·미디어 공간\n문화·홍보관 조성\n도시 스토리텔링 기반 연출' }
+        ]
+    },
+    {
+        id: 'branding',
+        label: '브랜딩',
+        enTitle: 'Branding',
+        koTitle: '브랜드 디자인',
+        desc: '기업 분석부터 리브랜딩까지 원스탑 서비스 제공',
+        process: ['기업 리서치', '전략 수립', 'Identity 개발', '시각화', '실행 및 확장'],
+        images: [
+            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&fit=crop', // Big left
+            'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=600&fit=crop', // Top right
+            'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&fit=crop'  // Bottom right
+        ],
+        layout: 'grid-branding',
+        footerCenter: '기업 리브랜딩 / 웹, 앱 제작 / 모바일 서비스 제작\nCi, Bi 제작 / 패키지, 편집 디자인 제작/ 제품 디자인 및 목업, 생산'
+    },
+    {
+        id: 'exhibition',
+        label: '전시·인테리어',
+        enTitle: 'Exhibition & Experience Design',
+        koTitle: '전시 인테리어 디자인',
+        desc: '디자인 설계 및 실시설계, 시공까지 원스탑 서비스 제공',
+        process: ['기획', '기본구상', '기본설계', '실시설계', '제작 시공', '유지 보수'],
+        images: [
+            'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1400&fit=crop' // Full width interior
+        ],
+        layout: 'grid-full'
+    },
+    { id: 'academic', label: '학술 연구' },
+    {
+        id: 'support',
+        label: '지원 사업',
+        enTitle: 'Public Support Program',
+        koTitle: '공공기관 지원 사업',
+        desc: '지역·기관·단체의 지속가능한 발전을 위해 필요한 자원·정책·서비스 제공 및 현안 해결과 성과 창출',
+        process: ['기획', '기본구상', '기본설계', '실시설계', '제작 시공', '유지 보수'],
+        images: [
+            'https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=800&fit=crop',
+            'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&fit=crop'
+        ],
+        layout: 'grid-2'
+    },
+    { id: 'event', label: '이벤트·행사' },
 ];
 
 export default function WorkPage() {
-    const [activeTab, setActiveTab] = useState('환경 조형물');
+    // 기본 선택 탭: 환경 조형물
+    const [activeTab, setActiveTab] = useState(TAB_DATA[0].id);
+
+    const activeData = TAB_DATA.find(t => t.id === activeTab);
 
     return (
         <div className={styles.container}>
-            {/* Hero Section */}
-            <div className={styles.hero}>
-                <div style={{ fontSize: '0.9rem', marginBottom: '1rem', background: '#00ff00', color: '#000', padding: '0.2rem 0.8rem', display: 'inline-block', fontWeight: 'bold' }}>Work</div>
-                <h1 className={styles.titleMain}>WORK AREA</h1>
-                <div className={styles.titleSub} style={{ WebkitTextStroke: '1px #555', color: 'transparent', fontSize: '4rem', fontWeight: '800' }}>사업분야</div>
-            </div>
+            {/* 1. Hero Section */}
+            <section className={styles.heroSection}>
+                <div className={styles.heroContent}>
+                    <motion.div
+                        className={styles.badge}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        Work
+                    </motion.div>
+                    <motion.h1
+                        className={styles.heroTitle}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                        WORK AREA
+                    </motion.h1>
+                    <motion.h2
+                        className={styles.heroSubTitle}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                    >
+                        사업분야
+                    </motion.h2>
+                </div>
+            </section>
 
-            {/* Tabs */}
-            <div className={styles.tabsContainer}>
-                <div className={styles.tabs}>
-                    {tabs.map((tab, i) => (
+            {/* 2. Tab Navigation */}
+            <section className={styles.tabSection}>
+                <div className={styles.tabContainer}>
+                    {TAB_DATA.map((tab) => (
                         <button
-                            key={i}
-                            className={`${styles.tabBtn} ${activeTab === tab ? styles.tabBtnActive : ''}`}
-                            onClick={() => setActiveTab(tab)}
+                            key={tab.id}
+                            className={`${styles.tabBtn} ${activeTab === tab.id ? styles.tabActive : ''}`}
+                            onClick={() => setActiveTab(tab.id)}
                         >
-                            {tab}
+                            {tab.label}
                         </button>
                     ))}
                 </div>
-            </div>
+            </section>
 
-            {/* Content Section */}
-            <div className={styles.contentSection}>
-                {/* Environment Sculpture Section */}
-                {activeTab === '환경 조형물' && (
-                    <>
-                        <h2 className={styles.contentTitle}>Enviroment Sculpture | 환경 조형물</h2>
-                        <p className={styles.contentDesc}>
-                            환경 조형물은 3가지 테마로 분류하여 디자인 설계 및 제작, 설치를 진행합니다.
-                        </p>
-
-                        <div className={styles.processSteps}>
-                            <div className={styles.stepBox}>타당성 검토</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>디자인 개발</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>실시 설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>조형물 제작</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>현장 설치</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>유지 보수</div>
-                        </div>
-
-                        <div className={styles.grid}>
-                            {/* Column 1: 상징 조형물 */}
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea}>
-                                    <Image src="https://images.unsplash.com/photo-1558280696-6db244c015b6?q=80&w=600&fit=crop" alt="Symbolic Sculpture" fill style={{ objectFit: 'cover' }} />
+            {/* 3. Tab Content Area */}
+            <section className={styles.contentSection}>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeTab}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className={styles.contentInner}
+                    >
+                        {activeData && activeData.enTitle ? (
+                            <div className={styles.workDetail}>
+                                {/* Header (Titles) */}
+                                <div className={styles.detailHeader}>
+                                    <h3 className={styles.detailTitle}>
+                                        <span className={styles.enTitle}>{activeData.enTitle}</span>
+                                        <span className={styles.divider}>|</span>
+                                        <span className={styles.koTitle}>{activeData.koTitle}</span>
+                                    </h3>
+                                    <p className={styles.detailDesc}>{activeData.desc}</p>
                                 </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>상징 조형물</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>지역과 기업, 지자체 및</li>
-                                        <li>각종 단체의 대표성과</li>
-                                        <li>상징성을 담은 조형물</li>
-                                    </ul>
-                                </div>
-                            </div>
 
-                            {/* Column 2: 미술 작품 */}
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea}>
-                                    <Image src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?q=80&w=600&fit=crop" alt="Art Works" fill style={{ objectFit: 'cover' }} />
-                                </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>미술 작품</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>문화예술진흥조례에</li>
-                                        <li>따라 건축물에</li>
-                                        <li>설치되는 미술장식품</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            {/* Column 3: 조형 사인물 */}
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea}>
-                                    <Image src="https://images.unsplash.com/photo-1522885147691-06d859633fb8?q=80&w=600&fit=crop" alt="Sculptural Signage" fill style={{ objectFit: 'cover' }} />
-                                </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>조형 사인물</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>옥외광고물 설치 시</li>
-                                        <li>조형성을 갖춘</li>
-                                        <li>조형 사인물</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {activeTab === '환경 디자인' && (
-                    <>
-                        <h2 className={styles.contentTitle}>Enviroment Design | 환경 디자인</h2>
-                        <p className={styles.contentDesc}>
-                            환경 디자인은 3가지 테마로 분류하여 디자인 설계 및 제작, 설치를 진행합니다.
-                        </p>
-
-                        <div className={styles.processSteps}>
-                            <div className={styles.stepBox}>타당성 검토</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>디자인 개발</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>실시 설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>조형물 제작</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>현장 설치</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>유지 보수</div>
-                        </div>
-
-                        <div className={styles.grid}>
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '2fr 1fr', gap: '4px' }}>
-                                    <div style={{ gridColumn: '1 / span 2', position: 'relative', background: '#333' }}>
-                                        <Image src="https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=400&fit=crop" alt="Public Design 1" fill style={{ objectFit: 'cover' }} />
+                                {/* Process Steps */}
+                                {activeData.process && (
+                                    <div className={styles.processWrap}>
+                                        {activeData.process.map((step, idx) => (
+                                            <React.Fragment key={idx}>
+                                                <div className={styles.processStep}>
+                                                    <span className={styles.processText}>{step}</span>
+                                                </div>
+                                                {idx < activeData.process.length - 1 && (
+                                                    <div className={styles.processArrow}>
+                                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </React.Fragment>
+                                        ))}
                                     </div>
-                                    <div style={{ position: 'relative', background: '#333' }}>
-                                        <Image src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=400&fit=crop" alt="Public Design 2" fill style={{ objectFit: 'cover' }} />
+                                )}
+
+                                {/* Image Grids based on layout */}
+                                <div className={`${styles.imageGrid} ${styles[activeData.layout || '']}`}>
+                                    {activeData.layout === 'grid-branding' && activeData.images && (
+                                        <>
+                                            <div className={styles.brandImgMain}>
+                                                <Image src={activeData.images[0]} alt="Brand Main" fill style={{ objectFit: 'cover' }} />
+                                            </div>
+                                            <div className={styles.brandImgSubWrap}>
+                                                <div className={styles.brandImgSub}>
+                                                    <Image src={activeData.images[1]} alt="Brand Sub 1" fill style={{ objectFit: 'cover' }} />
+                                                </div>
+                                                <div className={styles.brandImgSub}>
+                                                    <Image src={activeData.images[2]} alt="Brand Sub 2" fill style={{ objectFit: 'cover' }} />
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                    {activeData.layout !== 'grid-branding' && activeData.images && (
+                                        activeData.images.map((img, idx) => (
+                                            <div key={idx} className={styles.standardImg}>
+                                                <Image src={img} alt={`${activeData.koTitle} ${idx}`} fill style={{ objectFit: 'cover' }} />
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                {/* Footers */}
+                                {activeData.footerCols && (
+                                    <div className={styles.footerGrid}>
+                                        {activeData.footerCols.map((col, idx) => (
+                                            <div key={idx} className={styles.footerCol}>
+                                                <h4 className={styles.footerColTitle}>{col.title}</h4>
+                                                <p className={styles.footerColText}>
+                                                    {col.text.split('\n').map((line, i) => (
+                                                        <React.Fragment key={i}>
+                                                            {line}<br />
+                                                        </React.Fragment>
+                                                    ))}
+                                                </p>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div style={{ position: 'relative', background: '#333' }}>
-                                        <Image src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=400&fit=crop" alt="Public Design 3" fill style={{ objectFit: 'cover' }} />
+                                )}
+
+                                {activeData.footerCenter && (
+                                    <div className={styles.footerCenter}>
+                                        <p>
+                                            {activeData.footerCenter.split('\n').map((line, i) => (
+                                                <React.Fragment key={i}>
+                                                    {line}<br />
+                                                </React.Fragment>
+                                            ))}
+                                        </p>
                                     </div>
-                                </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>공공디자인</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>거리·골목·보행환경</li>
-                                        <li>공공시설물(벤치, 쉘터, 가로등 등)</li>
-                                        <li>셉티드(CPTED) 안전환경디자인</li>
-                                        <li>생활환경 개선(벽면, 담장, 골목경관 등)</li>
-                                    </ul>
-                                </div>
+                                )}
+
                             </div>
-
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea} style={{ position: 'relative' }}>
-                                    <Image src="https://images.unsplash.com/photo-1563206767-5b1d9728d70e?q=80&w=400&fit=crop" alt="Visual Design" fill style={{ objectFit: 'cover' }} />
-                                </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>시각·정보환경디자인</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>종합안내판, WAYFINDING</li>
-                                        <li>공공사인시스템</li>
-                                        <li>관광·문화정보 디자인</li>
-                                        <li>공공브랜딩(BI/CI, 공간그래픽 등)</li>
-                                    </ul>
-                                </div>
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '10rem 0', color: '#666' }}>
+                                {activeData?.label} 컨텐츠 준비 중입니다.
                             </div>
-
-                            <div className={styles.gridItem}>
-                                <div className={styles.imageArea} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '4px' }}>
-                                    <div style={{ gridColumn: '1 / span 2', gridRow: '1 / span 2', position: 'relative', background: '#333' }}>
-                                        <Image src="https://images.unsplash.com/photo-1518998053901-5348d396916b?q=80&w=400&fit=crop" alt="Spatial Design Main" fill style={{ objectFit: 'cover' }} />
-                                    </div>
-                                    <div style={{ position: 'absolute', bottom: '10px', right: '10px', width: '40%', height: '40%', background: '#000', border: '2px solid #fff', borderRadius: '4px', overflow: 'hidden' }}>
-                                        <Image src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=200&fit=crop" alt="Spatial Design Sub" fill style={{ objectFit: 'cover' }} />
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className={styles.itemTitle}>공간·경험환경디자인</h3>
-                                    <ul className={styles.itemList}>
-                                        <li>전시연출 및 콘텐츠</li>
-                                        <li>체험·교육·미디어 공간</li>
-                                        <li>문화·홍보관 조성</li>
-                                        <li>도시 스토리텔링 기반 연출</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {/* Branding Section */}
-                {activeTab === '브랜딩' && (
-                    <div className={styles.brandingSection}>
-                        <h2 className={styles.contentTitle}>Branding | 브랜드 디자인</h2>
-                        <p className={styles.contentDesc}>
-                            기업 분석부터 리브랜딩까지 원스탑 서비스 제공
-                        </p>
-
-                        <div className={styles.processSteps} style={{ marginBottom: '4rem' }}>
-                            <div className={styles.stepBox} style={{ backgroundColor: '#333', border: 'none' }}>기업 리서치</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox} style={{ backgroundColor: '#333', border: 'none' }}>전략 수립</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox} style={{ backgroundColor: '#333', border: 'none' }}>Identity 개발</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox} style={{ backgroundColor: '#333', border: 'none' }}>시각화</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox} style={{ backgroundColor: '#333', border: 'none' }}>실행 및 확장</div>
-                        </div>
-
-                        <div className={styles.brandingGrid}>
-                            {/* Left Column: Big Bag Image */}
-                            <div className={styles.brandingBigImage}>
-                                <Image
-                                    src="https://images.unsplash.com/photo-1622560417282-5631758c0676?q=80&w=800&fit=crop"
-                                    alt="Branding Bag"
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </div>
-
-                            {/* Right Column: Stacked Images */}
-                            <div className={styles.brandingSideCol}>
-                                <div className={styles.brandingSideImage}>
-                                    {/* Logo Placeholder */}
-                                    <div style={{ color: '#005f73', fontWeight: 'bold', fontSize: '1.5rem', textAlign: 'center' }}>
-                                        <span style={{ color: '#ca6702', display: 'block', fontSize: '0.8rem', marginBottom: '0.2rem' }}>YONGDAP NADLEE MARKET</span>
-                                        <span style={{ fontSize: '2rem' }}>용답</span><br />나들시장
-                                    </div>
-                                </div>
-                                <div className={styles.brandingSideImage}>
-                                    {/* Characters Placeholder */}
-                                    <Image
-                                        src="https://images.unsplash.com/photo-1560963689-02e820147bc3?q=80&w=400&fit=crop"
-                                        alt="Character Design"
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <p className={styles.brandingDesc}>
-                            기업 리브랜딩 / 웹, 앱 제작 / 모바일 서비스 제작<br />
-                            Ci, Bi 제작 / 패키지, 편집 디자인 제작/ 제품 디자인 및 목업, 생산
-                        </p>
-                    </div>
-                )}
-
-                {/* Exhibition & Interior Design Section */}
-                {activeTab === '전시·인테리어' && (
-                    <div className={styles.exhibitionSection}>
-                        <h2 className={styles.contentTitle}>Exhibition & Experience Design | 전시 인테리어 디자인</h2>
-                        <p className={styles.contentDesc}>
-                            디자인 설계 및 실시설계, 시공까지 원스탑 서비스 제공
-                        </p>
-
-                        <div className={styles.processSteps}>
-                            <div className={styles.stepBox}>기획</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본구상</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>실시설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>제작 시공</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>유지 보수</div>
-                        </div>
-
-                        <div className={styles.exhibitionImageContainer}>
-                            <Image
-                                src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop"
-                                alt="Exhibition Design"
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
-                        </div>
-                    </div>
-                )}
-
-                {/* Support Project Section */}
-                {activeTab === '지원 사업' && (
-                    <div className={styles.supportSection}>
-                        <h2 className={styles.contentTitle}>Public Support Program | 공공기관 지원 사업</h2>
-                        <p className={styles.contentDesc}>
-                            지역·기관·단체의 지속가능한 발전을 위해 필요한 자원·정책·서비스 제공 및 현안 해결과 성과 창출
-                        </p>
-
-                        <div className={styles.processSteps}>
-                            <div className={styles.stepBox}>기획</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본구상</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>실시설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>제작 시공</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>유지 보수</div>
-                        </div>
-
-                        <div className={styles.supportGrid}>
-                            <div className={styles.supportImageItem}>
-                                <Image
-                                    src="https://images.unsplash.com/photo-1535591273668-578e31be46af?q=80&w=800&fit=crop"
-                                    alt="Public Support 1"
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </div>
-                            <div className={styles.supportImageItem}>
-                                <Image
-                                    src="https://images.unsplash.com/photo-1560179707-f14e90ef3cdd?q=80&w=800&fit=crop"
-                                    alt="Public Support 2"
-                                    fill
-                                    style={{ objectFit: 'cover' }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Event & Festival Section */}
-                {activeTab === '이벤트·행사' && (
-                    <div className={styles.eventSection}>
-                        <h2 className={styles.contentTitle}>Event & Festival | 이벤트·행사</h2>
-                        <p className={styles.contentDesc}>
-                            이벤트 기획 및 행사 무대 설치 및 제작
-                        </p>
-
-                        <div className={styles.processSteps}>
-                            <div className={styles.stepBox}>기획</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본구상</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>기본설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>실시설계</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>제작 시공</div>
-                            <span className={styles.stepArrow}>→</span>
-                            <div className={styles.stepBox}>유지 보수</div>
-                        </div>
-
-                        <div className={styles.eventGrid}>
-                            <div className={styles.eventLeftCol}>
-                                <div className={styles.eventImageItem}>
-                                    <Image
-                                        src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&fit=crop"
-                                        alt="Event Stage"
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                    />
-                                </div>
-                                <div className={styles.eventImageItem}>
-                                    <Image
-                                        src="https://images.unsplash.com/photo-1544161515-4ab6ce6db48c?q=80&w=800&fit=crop"
-                                        alt="Event Awards"
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                    />
-                                </div>
-                            </div>
-                            <div className={styles.eventRightCol}>
-                                <div className={styles.eventImageFull}>
-                                    <Image
-                                        src="https://images.unsplash.com/photo-1533174072545-e8d4aa97edf9?q=80&w=800&fit=crop"
-                                        alt="Outdoor Festival"
-                                        fill
-                                        style={{ objectFit: 'cover' }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+            </section>
         </div>
     );
 }
